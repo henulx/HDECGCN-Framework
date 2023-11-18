@@ -9,17 +9,17 @@ Resultb = np.array(Resultb)
 Resulta = np.array(Resulta)
 
 ResultAll = np.row_stack((Resulta,Resultb))
-IP_Samples = [46,1428,830,237,483,730,28,478,20,972,2455,593,205,1265,386,93]
-IP_Samples = np.array(IP_Samples)
-IP_SumNum = 10249
+#IP_Samples = [46,1428,830,237,483,730,28,478,20,972,2455,593,205,1265,386,93]
+#IP_Samples = np.array(IP_Samples)
+#IP_SumNum = 10249
 
 # KSC_Samples = [761,243,256,252,161,229,105,431,520,404,419,503,927]
 # KSC_Samples = np.array(KSC_Samples)
 # KSC_SumNum = 5211
 
-# UP_Samples = [6631,18649,2099,3064,1345,5029,1330,3682,947]
-# UP_Samples = np.array(UP_Samples)
-# UP_SumNum = 42776
+UP_Samples = [6631,18649,2099,3064,1345,5029,1330,3682,947]
+UP_Samples = np.array(UP_Samples)
+UP_SumNum = 42776
 
 def get_max_value(martix):
   '''
@@ -39,6 +39,6 @@ if __name__ == '__main__':
   CategoryAccuracy = get_max_value(ResultAll)
   AverageAccuracy = sum(CategoryAccuracy)/len(CategoryAccuracy)/100
   CategoryAccuracy = np.array(CategoryAccuracy)
-  OverallAccuracy = np.dot(IP_Samples,CategoryAccuracy/100)/IP_SumNum
+  #OverallAccuracy = np.dot(IP_Samples,CategoryAccuracy/100)/IP_SumNum
   #OverallAccuracy = np.dot(KSC_Samples, CategoryAccuracy / 100) / KSC_SumNum
-  #OverallAccuracy = np.dot(UP_Samples, CategoryAccuracy/100) / UP_SumNum
+  OverallAccuracy = np.dot(UP_Samples, CategoryAccuracy/100) / UP_SumNum
