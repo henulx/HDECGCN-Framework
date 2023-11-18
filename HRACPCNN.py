@@ -333,13 +333,15 @@ conv_layer3 = Conv3D(filters=32, kernel_size=(3, 3, 3), activation='relu',paddin
 conv3d_shape = conv_layer3.shape
 conv_layer3_ = Reshape((conv3d_shape[1], conv3d_shape[2], conv3d_shape[3]*conv3d_shape[4]))(conv_layer3)
 
-conv_layer4 = Conv2D(filters=64, kernel_size=(3,3), padding='same')(conv_layer3_)
+conv_layer4 = Conv2D(filters=64, kernel_size=(3,3), padding='same',groups=64)(conv_layer3_)#64*3*3,PaviaU
+#conv_layer4 = Conv2D(filters=64, kernel_size=(3,3), padding='same')(conv_layer3_)#Indian Pines,KSC
 conv_layer4 = bn_prelu(conv_layer4)
 
 conv_layer5 = Conv2D(filters=64, kernel_size=(1,1))(conv_layer4)
 conv_layer5_ = tf.concat([conv_layer5,conv_layer4,conv_layer5],0)
 conv_layer5_ = bn_prelu(conv_layer5_)
-conv_layer6 = Conv2D(filters=192, kernel_size=(1,3), padding='same')(conv_layer5_)
+conv_layer6 = Conv2D(filters=192, kernel_size=(1,3), padding='same',groups=64)(conv_layer5_)#64*3*3,PaviaU
+#conv_layer6 = Conv2D(filters=192, kernel_size=(1,3), padding='same')(conv_layer5_)#Indian Pines,KSC
 conv_layer6 = bn_prelu(conv_layer6)
 conv_layer7 = Conv2D(filters=192, kernel_size=(3,1), padding='same')(conv_layer6)
 conv_layer7 = bn_prelu(conv_layer7)
