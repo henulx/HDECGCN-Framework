@@ -1,19 +1,19 @@
 %=========================================================================
 clc;clear;close all
 % addpath('.\libsvm-3.21\matlab');
-load('.\IndianPines\useful_sp_lab')%%Indian Pines
+%load('.\IndianPines\useful_sp_lab')%%Indian Pines
 %load('.\KSC\useful_sp_lab')%%KSC
-%load('.\paviaU\useful_sp_lab')%%PaviaU
+load('.\paviaU\useful_sp_lab')%%PaviaU
 addpath(genpath(cd));
 
-num_PC           =   200;  
-%num_PC           =   103;  
+%num_PC           =   200;  
+num_PC           =   103;  
 %num_PC           =   176;
 %num_Pixel        =   1; % THE OPTIMAL Number of Superpixel. Indian:100, PaviaU:20, KSC:1
-num_Pixel        =   100;
+num_Pixel        =   20;
 
-database         =   'Indian';
-%database         =   'PaviaU';
+%database         =   'Indian';
+database         =   'PaviaU';
 %database         =   'KSC';
 
 %% load the HSI dataset
@@ -33,9 +33,9 @@ end
 data3D = data3D./max(data3D(:));
 %% super-pixels segmentation
 labels = cubseg(data3D,num_Pixel);
-%[PaviaU_gyh] = SuperPCA(data3D,num_PC,labels);
+[PaviaU_gyh] = SuperPCA(data3D,num_PC,labels);
 %[KSC_gyh] = SuperPCA(data3D,num_PC,labels);
-[IP_gyh] = SuperPCA(data3D,num_PC,labels);
+%[IP_gyh] = SuperPCA(data3D,num_PC,labels);
 %% Calculate dynamic weight
 % B1 = KSC_gyh(:,:,1);
 % [M,N,B] = size(KSC_gyh);
@@ -43,9 +43,9 @@ labels = cubseg(data3D,num_Pixel);
 % B1 = IP_gyh(:,:,1);
 % [M,N,B] = size(IP_gyh);
 % IP_gyh_2d = reshape(IP_gyh,M*N,B);
-B1 = IP_gyh(:,:,1);
-[M,N,B] = size(IP_gyh);
-IP_gyh_2d = reshape(IP_gyh,M*N,B);
+B1 = PaviaU_gyh(:,:,1);
+[M,N,B] = size(PaviaU_gyh);
+IP_gyh_2d = reshape(PaviaU_gyh,M*N,B);
 useful_sp_lab_1d = reshape(useful_sp_lab,M*N,1);
 for i=1:size(IP_gyh_2d,2)
     IP_add = [IP_gyh_2d,useful_sp_lab_1d];
@@ -95,20 +95,20 @@ final = diag(final);
 final(1,:) = [];
 final(:,1) = [];
 save('..\final.mat','final')%Innovation point 1
-save('..\IP_gyh.mat','IP_gyh')
+%save('..\IP_gyh.mat','IP_gyh')
 %save('..\KSC_gyh.mat','KSC_gyh')
-%save('..\PaviaU_gyh.mat','PaviaU_gyh')
+save('..\PaviaU_gyh.mat','PaviaU_gyh')
 
-%load('..\PaviaU_gt.mat');
+load('..\PaviaU_gt.mat');
 %load('..\KSC_gt.mat');
-load('..\IP_gt.mat');
+%load('..\IP_gt.mat');
 %% Divide training samples and test samples
 %num_tr = [46,15,15,15,10,14,6,26,31,24,25,30,55]%6%KSC
-num_tr = [5,143,83,24,48,73,3,48,2,97,245,59,20,126,39,9];%10IP
-%num_tr = [1989,5594,630,919,403,1509,399,1105,284];%30UP
-[ ~, ~, ~, ~, trpos,tepos ] = TrainTestPixel(IP_gyh, IP_gt, num_tr, 15);
+%num_tr = [5,143,83,24,48,73,3,48,2,97,245,59,20,126,39,9];%10IP
+num_tr = [1989,5594,630,919,403,1509,399,1105,284];%30UP
+%[ ~, ~, ~, ~, trpos,tepos ] = TrainTestPixel(IP_gyh, IP_gt, num_tr, 15);
 %[ ~, ~, ~, ~, trpos,tepos ] = TrainTestPixel1(KSC_gyh, KSC_gt, num_tr, 15);
-%[ ~, ~, ~, ~, trpos,tepos] = TrainTestPixel(PaviaU_gyh, PaviaU_gt, num_tr, 15);
+[ ~, ~, ~, ~, trpos,tepos] = TrainTestPixel(PaviaU_gyh, PaviaU_gt, num_tr, 15);
 save('..\trpos', 'trpos');
 save('..\tepos', 'tepos');
 system('python trainMDGCN.py');
